@@ -13,11 +13,8 @@ import com.mertpolat.pojo.DatabaseConnection;
 public class Application {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
 		DatabaseConnection dt =new DatabaseConnection();
 		dt.createTable();
 		SpringApplication.run(Application.class, args);
-
-
 	}
 }

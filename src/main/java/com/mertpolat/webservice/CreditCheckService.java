@@ -1,6 +1,13 @@
 package com.mertpolat.webservice;
 
 import java.util.Random;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,40 +22,36 @@ import com.mertpolat.pojo.User;
 @RestController
 public class CreditCheckService {
 	@RequestMapping(value = "/creditCheck", method = RequestMethod.POST)
-	public ResponseEntity<String> creditCheck(@RequestBody User user) {
+	public ResponseEntity<String> creditCheck(@RequestBody User user) throws Exception {
 		DatabaseConnection db = new DatabaseConnection();
 
-		int creditScore = CalculateCreditSkore(user.getTc()); // getCreditScore(user.getTc()); kredi skor bilgisinin alýndýðý varsayýlýyor
-		if (creditScore < 500)
-		{
+		int creditScore = CalculateCreditSkore(user.getTc()); // getCreditScore(user.getTc()); kredi skor bilgisinin daha önceden
+															  // yazýldýðý varsayýlan kredi skor servisten döndüðü varsayýlmýþtýr.														  
+		if (creditScore < 500) {
 			user.setLimit(0);
 			user.setCreditStatus(false);
-			db.Add(user);
+			db.AddUser(user);
+			db.AddMessage(user, "Kredi baþvurunuz red edilmiþtir");
 
 			return new ResponseEntity<String>("Kredi baþvurunuz red edilmiþtir.", HttpStatus.OK);
-		} else if (creditScore >= 500 && creditScore < 1000) 
-		{
-			if (user.getMonthlyIncome() < 5000) 
-			{
+		} else if (creditScore >= 500 && creditScore < 1000) {
+			if (user.getMonthlyIncome() < 5000) {
 				user.setLimit(10000);
 				user.setCreditStatus(true);
-
-			    //statement.executeUpdate("insert into tblRESIM(resimID,resimYol,resimEvId) VALUES  (1,'"+aa+"11.jpg',1)");
-				db.Add(user);
-
+				db.AddUser(user);
+				db.AddMessage(user, user.getLimit() + " Tl lik krediniz hazýr");
+				
 				return new ResponseEntity<String>(user.getLimit() + " Tl lik krediniz hazýr", HttpStatus.OK);
-			} 
-		}
-		else 
-		{
-			user.setLimit( 4 * user.getMonthlyIncome()); 
+			}
+		} else {
+			user.setLimit(4 * user.getMonthlyIncome()); // 4 = kredi limit çarpaný
 			user.setCreditStatus(true);
-			db.Add(user);
+			db.AddUser(user);
+			db.AddMessage(user, user.getLimit() + " Tl lik krediniz hazýr");
 
 			return new ResponseEntity<String>(user.getLimit() + " Tl lik krediniz hazýr", HttpStatus.OK);
 		}
 		System.out.println(user);
-		// return new ResponseEntity<User>(user, HttpStatus.OK);
 		return null;
 	}
 
@@ -59,5 +62,4 @@ public class CreditCheckService {
 		int creditSkore = rast.nextInt(2000);
 		return creditSkore;
 	}
-
 }

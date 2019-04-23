@@ -31,9 +31,9 @@ public class CreditCheckService {
 			user.setLimit(0);
 			user.setCreditStatus(false);
 			db.AddUser(user);
-			db.AddMessage(user, "Kredi başvurunuz red edilmiştir");
+			db.AddMessage(user, "Kredi basvurunuz red edilmistir");
 
-			return new ResponseEntity<String>("Kredi başvurunuz red edilmiştir.", HttpStatus.OK);
+			return new ResponseEntity<String>("Kredi basvurunuz red edilmistir.", HttpStatus.OK);
 		} else if (creditScore >= 500 && creditScore < 1000) {
 			if (user.getMonthlyIncome() < 5000) {
 				user.setLimit(10000);
@@ -41,15 +41,15 @@ public class CreditCheckService {
 				db.AddUser(user);
 				db.AddMessage(user, user.getLimit() + " Tl lik krediniz hazır");
 				
-				return new ResponseEntity<String>(user.getLimit() + " Tl lik krediniz hazır", HttpStatus.OK);
+				return new ResponseEntity<String>(user.getLimit() + " Tl lik krediniz hazir", HttpStatus.OK);
 			}
 		} else {
-			user.setLimit(4 * user.getMonthlyIncome()); // 4 = kredi limit çarpanı
+			user.setLimit(4 * user.getMonthlyIncome()); // 4 = kredi limit carpani
 			user.setCreditStatus(true);
 			db.AddUser(user);
-			db.AddMessage(user, user.getLimit() + " Tl lik krediniz hazır");
+			db.AddMessage(user, user.getLimit() + " Tl lik krediniz hazir");
 
-			return new ResponseEntity<String>(user.getLimit() + " Tl lik krediniz hazır", HttpStatus.OK);
+			return new ResponseEntity<String>(user.getLimit() + " Tl lik krediniz hazir", HttpStatus.OK);
 		}
 		System.out.println(user);
 		return null;

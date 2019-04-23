@@ -52,7 +52,6 @@ public class DatabaseConnection {
 					"INSERT INTO Messages(messageId,message,telephone,customerLimit,creditStatus) VALUES(1,'Test message','05394070000',5000,1)");
 
 			statement.close();
-
 		}
 
 		catch (SQLException e) {
